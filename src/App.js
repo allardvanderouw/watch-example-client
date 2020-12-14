@@ -8,6 +8,7 @@ class App extends PureComponent {
   state = {
     uuid: uuidv4(),
     user: null,
+    isRunning: false,
     values: []
   }
 
@@ -32,8 +33,9 @@ class App extends PureComponent {
           })
         }
 
-        // Stop at 250 (240 = 2 minutes)
-        if (this.state.values.length === 250) {
+        // Stop at 360 (360 = 3 minutes)
+        if (this.state.values.length === 360) {
+          this.setState({ isRunning: false })
           clearInterval(this.interval)
         }
       })
@@ -48,6 +50,8 @@ class App extends PureComponent {
         const options = { upsert: true }
         countersCollection.updateOne(query, update, options)
       }, 500)
+
+      this.setState({ isRunning: true })
     }
 
     // Start login and counter
@@ -55,15 +59,27 @@ class App extends PureComponent {
   }
 
   render() {
-    const { uuid, user, values } = this.state
+    const { uuid, user, values, isRunning } = this.state
 
     if (!user) {
       return null
     }
 
+    let status
+    if (isRunning) {
+      status = 'Running'
+    } else if (values.length === 0) {
+      status = 'Not started'
+    } else if (values.length === 360) {
+      status = 'Successfully processed 360 watch examples in 3 minutes (2 per second)'
+    } else {
+      status = `Failed processing 360 watch examples (processed ${values.length})`
+    }
+
     return (
       <div className="App">
         <header className="App-header">
+          <p>Status: {status}</p>
           <p>
             UUID: {uuid}
           </p>

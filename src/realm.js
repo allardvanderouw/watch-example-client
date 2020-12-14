@@ -1,6 +1,6 @@
 import { Stitch, RemoteMongoClient, AnonymousCredential } from 'mongodb-stitch-browser-sdk'
 
-const stitchAppId = 'watch-example-ksaij'
+const stitchAppId = 'watch-example-seisr'
 const stitchDbName = 'db'
 
 // Create the Stitch app (if not already created)
